@@ -148,11 +148,19 @@ total = st.session_state['data']['VALOR'].fillna(0).sum()
 st.metric("Total a pagar (R$)", f"{total:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."))
 
 col1, col2 = st.columns(2)
+
 with col1:
-    if st.button("Baixar Excel atualizado"):
-        xls = to_excel_bytes(st.session_state['data'])
-        st.download_button("Clique para baixar", data=xls, file_name="nfs_a_pagar_atualizado.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    xls = to_excel_bytes(st.session_state['data'])  # sempre gera os bytes atuais
+    st.download_button(
+        label="Baixar Excel atualizado",
+        data=xls,
+        file_name="nfs_a_pagar_atualizado.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        key="download_xls"
+    )
+
 with col2:
-    if st.button("Limpar tudo"):
+    if st.button("Limpar tudo", key="clear_all"):
         st.session_state['data'] = pd.DataFrame(columns=COLUMNS)
         st.success("Base zerada.")
+
